@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロンプト自動作成アプリ</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #343a40;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    form div {
+      margin-bottom: 30px;
+    }
+    label {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #343a40;
+      font-size: 18px;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      resize: vertical;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+    }
+    button {
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 18px;
+      margin: 10px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #output {
+      width: 100%;
+      height: 240px;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+    }
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .checkbox-label,
+    .radio-label {
+      display: inline-block;
+      margin-right: 15px;
+      margin-bottom: 5px;
+      font-size: 16px;
+      color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <h1>プロンプト自動作成アプリ</h1>
+  
+  <form id="promptForm">
+    <div>
+      <label for="genre">ゲームのジャンル:</label><br>
+      <input type="checkbox" id="action" name="genre" value="アクション">
+      <label for="action" class="checkbox-label">アクション</label>
+      <input type="checkbox" id="adventure" name="genre" value="アドベンチャー">
+      <label for="adventure" class="checkbox-label">アドベンチャー</label>
+      <input type="checkbox" id="rpg" name="genre" value="RPG">
+      <label for="rpg" class="checkbox-label">RPG</label>
+      <input type="checkbox" id="jrpg" name="genre" value="JRPG">
+      <label for="jrpg" class="checkbox-label">JRPG</label>
+      <input type="checkbox" id="wrpg" name="genre" value="WRPG">
+      <label for="wrpg" class="checkbox-label">WRPG</label>
+      <input type="checkbox" id="simulation" name="genre" value="シミュレーション">
+      <label for="simulation" class="checkbox-label">シミュレーション</label>
+      <input type="checkbox" id="strategy" name="genre" value="ストラテジー">
+      <label for="strategy" class="checkbox-label">ストラテジー</label>
+      <input type="checkbox" id="puzzle" name="genre" value="パズル">
+      <label for="puzzle" class="checkbox-label">パズル</label>
+      <input type="checkbox" id="racing" name="genre" value="レーシング">
+      <label for="racing" class="checkbox-label">レーシング</label>
+      <input type="checkbox" id="sports" name="genre" value="スポーツ">
+      <label for="sports" class="checkbox-label">スポーツ</label>
+      <input type="checkbox" id="fighting" name="genre" value="格闘">
+      <label for="fighting" class="checkbox-label">格闘</label>
+      <input type="checkbox" id="shooter" name="genre" value="シューティング">
+      <label for="shooter" class="checkbox-label">シューティング</label>
+      <input type="checkbox" id="horror" name="genre" value="ホラー">
+      <label for="horror" class="checkbox-label">ホラー</label>
+      <input type="checkbox" id="survival" name="genre" value="サバイバル">
+      <label for="survival" class="checkbox-label">サバイバル</label>
+      <input type="checkbox" id="rhythm" name="genre" value="リズム">
+      <label for="rhythm" class="checkbox-label">リズム</label>
+      <input type="checkbox" id="visualNovel" name="genre" value="ビジュアルノベル">
+      <label for="visualNovel" class="checkbox-label">ビジュアルノベル</label>
+      <input type="checkbox" id="otherGenre" name="genre" value="その他">
+      <label for="otherGenre" class="checkbox-label">その他</label>
+    </div>
+    
+    <div>
+      <label for="objective">ゲームの目的や概要:</label>
+      <textarea id="objective" name="objective"></textarea>
+    </div>
+    
+    <div>
+      <label>ターゲットとする年齢層:</label><br>
+      <input type="radio" id="kids" name="ageGroup" value="子供向け">
+      <label for="kids" class="radio-label">子供向け</label>
+      <input type="radio" id="teens" name="ageGroup" value="10代向け">
+      <label for="teens" class="radio-label">10代向け</label>
+      <input type="radio" id="adults" name="ageGroup" value="大人向け">
+      <label for="adults" class="radio-label">大人向け</label>
+      <input type="radio" id="allAges" name="ageGroup" value="全年齢向け">
+      <label for="allAges" class="radio-label">全年齢向け</label>
+    </div>
+    
+    <div>
+      <label>ゲームの視点:</label><br>
+      <input type="radio" id="firstPerson" name="perspective" value="一人称視点">
+      <label for="firstPerson" class="radio-label">一人称視点</label>
+      <input type="radio" id="thirdPerson" name="perspective" value="三人称視点">
+      <label for="thirdPerson" class="radio-label">三人称視点</label>
+      <input type="radio" id="topDown" name="perspective" value="トップダウン">
+      <label for="topDown" class="radio-label">トップダウン</label>
+      <input type="radio" id="sideScroll" name="perspective" value="横スクロール">
+      <label for="sideScroll" class="radio-label">横スクロール</label>
+      <input type="radio" id="isometric" name="perspective" value="アイソメトリック">
+      <label for="isometric" class="radio-label">アイソメトリック</label>
+      <input type="radio" id="otherPerspective" name="perspective" value="その他">
+      <label for="otherPerspective" class="radio-label">その他</label>
+    </div>
+    
+    <div>
+      <label>ゲームの雰囲気:</label><br>
+      <input type="checkbox" id="bright" name="atmosphere" value="明るい">
+      <label for="bright" class="checkbox-label">明るい</label>
+      <input type="checkbox" id="dark" name="atmosphere" value="暗い">
+      <label for="dark" class="checkbox-label">暗い</label>
+      <input type="checkbox" id="realistic" name="atmosphere" value="現実的">
+      <label for="realistic" class="checkbox-label">現実的</label>
+      <input type="checkbox" id="fantasy" name="atmosphere" value="ファンタジー">
+      <label for="fantasy" class="checkbox-label">ファンタジー</label>
+      <input type="checkbox" id="sci-fi" name="atmosphere" value="SF">
+      <label for="sci-fi" class="checkbox-label">SF</label>
+      <input type="checkbox" id="horror" name="atmosphere" value="ホラー">
+      <label for="horror" class="checkbox-label">ホラー</label>
+      <input type="checkbox" id="comical" name="atmosphere" value="コミカル">
+      <label for="comical" class="checkbox-label">コミカル</label>
+      <input type="checkbox" id="cute" name="atmosphere" value="キュート">
+      <label for="cute" class="checkbox-label">キュート</label>
+      <input type="checkbox" id="serious" name="atmosphere" value="シリアス">
+      <label for="serious" class="checkbox-label">シリアス</label>
+      <input type="checkbox" id="otherAtmosphere" name="atmosphere" value="その他">
+      <label for="otherAtmosphere" class="checkbox-label">その他</label>
+    </div>
+    
+    <div>
+      <label for="characters">登場するキャラクター:</label>
+      <textarea id="characters" name="characters"></textarea>
+    </div>
+    
+    <div>
+      <label for="setting">ゲームの舞台設定:</label>
+      <textarea id="setting" name="setting"></textarea>
+    </div>
+    
+    <div>
+      <label for="uniqueElements">ゲームのユニークな要素:</label>
+      <textarea id="uniqueElements" name="uniqueElements"></textarea>
+    </div>
+    
+    <div>
+      <label for="language">使用するプログラミング言語:</label><br>
+      <input type="checkbox" id="cpp" name="language" value="C++">
+      <label for="cpp" class="checkbox-label">C++</label>
+      <input type="checkbox" id="csharp" name="language" value="C#">
+      <label for="csharp" class="checkbox-label">C#</label>
+      <input type="checkbox" id="java" name="language" value="Java">
+      <label for="java" class="checkbox-label">Java</label>
+      <input type="checkbox" id="python" name="language" value="Python">
+      <label for="python" class="checkbox-label">Python</label>
+      <input type="checkbox" id="javascript" name="language" value="JavaScript">
+      <label for="javascript" class="checkbox-label">JavaScript</label>
+      <input type="checkbox" id="lua" name="language" value="Lua">
+      <label for="lua" class="checkbox-label">Lua</label>
+      <input type="checkbox" id="ruby" name="language" value="Ruby">
+      <label for="ruby" class="checkbox-label">Ruby</label>
+      <input type="checkbox" id="html" name="language" value="HTML">
+      <label for="html" class="checkbox-label">HTML</label>
+      <input type="checkbox" id="otherLanguage" name="language" value="その他">
+      <label for="otherLanguage" class="checkbox-label">その他</label>
+    </div>
+    
+    <div>
+      <label for="codeType">必要なコードの種類:</label><br>
+      <input type="checkbox" id="allCode" name="codeType" value="全てのコード">
+      <label for="allCode" class="checkbox-label">全てのコード</label><br>
+      <input type="checkbox" id="mainLoop" name="codeType" value="ゲームのメインループ、イベント処理、状態管理などを行うコード">
+      <label for="mainLoop" class="checkbox-label">ゲームのメインループ、イベント処理、状態管理などを行うコード</label><br>
+      <input type="checkbox" id="graphics" name="codeType" value="キャラクターやオブジェクトの描画、アニメーション、衝突判定などを行うコード">
+      <label for="graphics" class="checkbox-label">キャラクターやオブジェクトの描画、アニメーション、衝突判定などを行うコード</label><br>
+      <input type="checkbox" id="input" name="codeType" value="ユーザー入力の処理、ゲームの操作性に関するコード">
+      <label for="input" class="checkbox-label">ユーザー入力の処理、ゲームの操作性に関するコード</label><br>
+      <input type="checkbox" id="ui" name="codeType" value="ゲームのUI、メニュー、HUDなどの表示と操作に関するコード">
+      <label for="ui" class="checkbox-label">ゲームのUI、メニュー、HUDなどの表示と操作に関するコード</label><br>
+      <input type="checkbox" id="gameLogic" name="codeType" value="ゲームのルール、スコア計算、難易度調整などのゲームロジックに関するコード">
+      <label for="gameLogic" class="checkbox-label">ゲームのルール、スコア計算、難易度調整などのゲームロジックに関するコード</label><br>
+      <input type="checkbox" id="audio" name="codeType" value="サウンドやエフェクトの再生、音量調整などの音響に関するコード">
+      <label for="audio" class="checkbox-label">サウンドやエフェクトの再生、音量調整などの音響に関するコード</label><br>
+      <input type="checkbox" id="data" name="codeType" value="ゲームのセーブ、ロード、設定の保存などのデータ管理に関するコード">
+      <label for="data" class="checkbox-label">ゲームのセーブ、ロード、設定の保存などのデータ管理に関するコード</label><br>
+      <input type="checkbox" id="network" name="codeType" value="ネットワーク対戦やオンラインランキングなどのネットワーク機能に関するコード">
+      <label for="network" class="checkbox-label">ネットワーク対戦やオンラインランキングなどのネットワーク機能に関するコード</label>
+    </div>
+    
+    <div>
+      <label for="instructions">追加の指示:</label>
+      <textarea id="instructions" name="instructions"></textarea>
+    </div>
+    
+    <button type="button" onclick="generatePrompt()">プロンプトを生成</button>
+    <button type="button" onclick="generateRandomPrompt()">ランダム生成</button>
+  </form>
+  
+  <div>
+    <textarea id="output" rows="10" cols="50" readonly></textarea>
+    <button type="button" onclick="copyPrompt()">プロンプトをコピー</button>
+  </div>
+  
+  <script>
+    function generatePrompt() {
+      const genres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(el => el.value);
+      const objective = document.getElementById("objective").value;
+      const ageGroup = document.querySelector('input[name="ageGroup"]:checked').value;
+      const perspective = document.querySelector('input[name="perspective"]:checked').value;
+      const atmosphere = Array.from(document.querySelectorAll('input[name="atmosphere"]:checked')).map(el => el.value);
+      const characters = document.getElementById("characters").value;
+      const setting = document.getElementById("setting").value;
+      const uniqueElements = document.getElementById("uniqueElements").value;
+      const languages = Array.from(document.querySelectorAll('input[name="language"]:checked')).map(el => el.value);
+      const codeTypes = Array.from(document.querySelectorAll('input[name="codeType"]:checked')).map(el => el.value);
+      const instructions = document.getElementById("instructions").value;
+      
+      const prompt = `
+        ゲームのジャンル: ${genres.join(", ")}
+        ゲームの目的や概要: ${objective}
+        ターゲットとする年齢層: ${ageGroup}
+        ゲームの視点: ${perspective}
+        ゲームの雰囲気: ${atmosphere.join(", ")}
+        登場するキャラクター: ${characters}
+        ゲームの舞台設定: ${setting}
+        ゲームのユニークな要素: ${uniqueElements}
+        使用するプログラミング言語: ${languages.join(", ")}
+        
+        必要なコードの種類:
+        ${codeTypes.join("\n")}
+        
+        追加の指示:
+        ${instructions}
+        
+        上記の要件を満たした、指定されたプログラミング言語のコードを全て完璧に書いてください。コードは、選択された必要なコードの種類に基づいて、適切に構成されている必要があります。コードには、詳細なコメントを含め、可読性と保守性を確保してください。
+      `;
+      
+      document.getElementById("output").value = prompt;
+    }
+    
+    function generateRandomPrompt() {
+      const genreOptions = document.querySelectorAll('input[name="genre"]');
+      const ageGroupOptions = document.querySelectorAll('input[name="ageGroup"]');
+      const perspectiveOptions = document.querySelectorAll('input[name="perspective"]');
+      const atmosphereOptions = document.querySelectorAll('input[name="atmosphere"]');
+      const languageOptions = document.querySelectorAll('input[name="language"]');
+      const codeTypeOptions = document.querySelectorAll('input[name="codeType"]');
+      
+      function selectRandomOptions(options, min, max) {
+        const shuffled = Array.from(options).sort(() => 0.5 - Math.random());
+        const count = Math.floor(Math.random() * (max - min + 1)) + min;
+        return shuffled.slice(0, count);
+      }
+      
+      selectRandomOptions(genreOptions, 1, 3).forEach(option => option.checked = true);
+      selectRandomOptions(ageGroupOptions, 1, 1).forEach(option => option.checked = true);
+      selectRandomOptions(perspectiveOptions, 1, 1).forEach(option => option.checked = true);
+      selectRandomOptions(atmosphereOptions, 1, 3).forEach(option => option.checked = true);
+      selectRandomOptions(languageOptions, 1, 2).forEach(option => option.checked = true);
+      
+      const allCodeOption = document.getElementById("allCode");
+      if (Math.random() < 0.3) {
+        allCodeOption.checked = true;
+      } else {
+        selectRandomOptions(codeTypeOptions, 2, 5).forEach(option => option.checked = true);
+      }
+      
+      document.getElementById("objective").value = "ランダムな目的や概要";
+      document.getElementById("characters").value = "ランダムなキャラクター";
+      document.getElementById("setting").value = "ランダムな舞台設定";
+      document.getElementById("uniqueElements").value = "ランダムなユニークな要素";
+      document.getElementById("instructions").value = "上記の要件を満たした、指定されたプログラミング言語のコードを全て完璧に書いてください。コードは、選択された必要なコードの種類に基づいて、適切に構成されている必要があります。コードには、詳細なコメントを含め、可読性と保守性を確保してください。";
+      
+      generatePrompt();
+    }
+    
+    function copyPrompt() {
+      const output = document.getElementById("output");
+      output.select();
+      document.execCommand("copy");
+      alert("プロンプトがクリップボードにコピーされました。");
+    }
+  </script>
+</body>
+</html>
